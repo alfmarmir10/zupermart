@@ -1,0 +1,46 @@
+.main-container{
+  height: 100vh;
+  width: 75vw;
+  background-color: var(--DarkBlue);
+  position: absolute;
+  top: 0;
+  right: -73vw;
+  transition: right 0.3s ease;
+}
+
+.main-container.open{
+  right: 0;
+}
+
+.floating-img-main-container{
+  width: 15vw;
+  height: 15vw;
+  border: 5px solid var(--DarkBlue);
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 1vh;
+  left: -17vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1vw;
+}
+
+.floating-img-secondary-container{
+  width: 11vw;
+  height: 11vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../../assets/img/carts.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.floating-img{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
