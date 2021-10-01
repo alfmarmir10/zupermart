@@ -15,16 +15,19 @@ function App() {
     <UserContextProvider>
       <Router>
         <Switch>
-          <Route>
-            <SignIn />
-          </Route>
-          <Route>
-            <Home />
-          </Route>
+          {/* <Layout> */}
+            <Route path="/home">
+              <Home />
+            </Route>  
+            <Route path="/">
+              <SignIn />
+            </Route>
+          {/* </Layout> */}
         </Switch>
       </Router>
     </UserContextProvider>
   );
 }
 
+// export default withAuthenticator(App);
 export default App;

@@ -2,10 +2,11 @@
   height: 100vh;
   width: 75vw;
   background-color: var(--DarkBlue);
-  position: absolute;
+  position: fixed;
   top: 0;
   right: -73vw;
   transition: right 0.3s ease;
+  z-index: 1;
 }
 
 .main-container.open{
@@ -43,4 +44,51 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
+}
+
+.content-main-container{
+  width: 95%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.avatar{
+  width: 10vw;
+  height: 10vw;
+  margin-top: 4vh;
+}
+
+.signOut{
+  width: 6vw;
+  height: 6vw;
+  position: absolute;
+  top: 1vh;
+  right: 2vw;
+  z-index: 1;
+}
+
+.cart-main-container{
+  width: 95%;
+  height: 70%;
+  background-color: white;
+  margin-top: 2vh;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.cart-items-container{
+  width: 100%;
+  height: 90%;
+  margin-top: 1vh;
+  background-color: rosybrown;
+  overflow-y: scroll;
 }

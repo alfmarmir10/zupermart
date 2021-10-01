@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-zupermart-staging-222405-authRole",
+      "UnauthRoleArn": "arn:aws:iam::006680663082:role/amplify-zupermart-staging-222405-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::006680663082:role/amplify-zupermart-staging-222405-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-zupermart-staging-222405-deployment",
+      "UnauthRoleName": "amplify-zupermart-staging-222405-unauthRole",
+      "StackName": "amplify-zupermart-staging-222405",
+      "StackId": "arn:aws:cloudformation:us-east-2:006680663082:stack/amplify-zupermart-staging-222405/f5742cf0-2173-11ec-857c-02bae60348ac",
+      "AmplifyAppId": "d1k0rbkn2d9heq"
+    },
+    "categories": {
+      "auth": {
+        "zupermart45e3ca74": {}
+      }
+    }
+  }
+}

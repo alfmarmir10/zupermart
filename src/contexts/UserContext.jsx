@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 
 const initialState = {
-  Name: "Prueba",
-  Email: "alfmarmirhb@gmail.com"
+  Email: ""
 }
 const UserContext = React.createContext(initialState);
 
