@@ -8,7 +8,9 @@ import SignIn from './views/SignIn';
 import Home from './views/Home';
 
 import UserContextProvider from './contexts/UserContext';
-
+import awsconfig from "./aws-exports";
+import Amplify from '@aws-amplify/core';
+Amplify.configure(awsconfig);
 
 function App() {
   return (
