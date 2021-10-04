@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
-const initialState = {
-  Email: ""
-}
-const UserContext = React.createContext(initialState);
+// const initialState = {
+//   Email: ""
+// }
+const UserContext = React.createContext();
 
 const UserContextProvider = ({children}) => {
-  const [User, setUser] = useState(initialState);
+  const [User, setUser] = useState();
 
   const val = {User, setUser};
 

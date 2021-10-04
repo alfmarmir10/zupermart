@@ -17,8 +17,11 @@ const SideBar = () => {
     Auth.currentAuthenticatedUser({
         bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
     }).then(user => {
-      setUser({Email:user.attributes.email})
       console.log(user);
+      const localUser = JSON.parse(localStorage.getItem("User"));
+      if(localUser.Email===user.attributes.email){
+        setUser({Email:localUser.Email, TypeUser: localUser.TypeUser});
+      }
     })
     .catch(err => {
       console.log(err);
@@ -28,12 +31,7 @@ const SideBar = () => {
   }, [])
 
   Hub.listen('auth', (data) => {
-    // console.log(data);
     switch (data.payload.event) {
-      case 'signIn':
-          setUser(data.payload.data.attributes.email);
-          history.push("./Home");
-        break;
       case 'signOut':
           setUser();
           history.push("./");

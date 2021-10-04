@@ -15,26 +15,26 @@ import Business from '../assets/img/teamwork.png';
 const SignIn = () => {
   const  history = useHistory();
   const {User, setUser} = useContext(UserContext);
-  const [TypeUser, setTypeUser] = useState();
+  const [TypeUserLocal, setTypeUserLocal] = useState();
 
-  const logoClassName = (TypeUser!==undefined) ? 'signin-logo-small' : 'signin-logo-big';
-  const customerClassName = (TypeUser==="Customer") ? 'customer-main-container-small bg-dark-blue flex-column-center' : 'customer-main-container-big flex-column-center';
-  const businessClassName = (TypeUser==="Business") ? 'customer-main-container-small bg-dark-blue flex-column-center' : 'customer-main-container-big flex-column-center';
-  const typeUserContainerClassName = (TypeUser!==undefined) ? 'type-user-container flex-row-center' : 'type-user-container flex-column-center';
+  const logoClassName = (TypeUserLocal!==undefined) ? 'signin-logo-small' : 'signin-logo-big';
+  const customerClassName = (TypeUserLocal==="Customer") ? 'customer-main-container-small bg-dark-blue flex-column-center' : (TypeUserLocal === undefined) ? 'customer-main-container-big flex-column-center' : 'customer-main-container-normal flex-column-center';
+  const businessClassName = (TypeUserLocal==="Business") ? 'customer-main-container-small bg-dark-blue flex-column-center' : (TypeUserLocal === undefined) ? 'customer-main-container-big flex-column-center' : 'customer-main-container-normal flex-column-center';
+  const typeUserContainerClassName = (TypeUserLocal!==undefined) ? 'type-user-container flex-row-space-around' : 'type-user-container flex-column-center';
 
   function selectCustomer(){
-    setTypeUser("Customer");
+    setTypeUserLocal("Customer");
   }
   
   function selectBusiness(){
-    setTypeUser("Business");
+    setTypeUserLocal("Business");
   }
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({
         bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
     }).then(user => {
-      setUser({Email:user.attributes.email})
+      // setUser({...User, TypeUser: TypeUserLocal, Email:user.attributes.email})
       history.push("./home");
     })
     .catch(err => {
@@ -48,7 +48,8 @@ const SignIn = () => {
     // console.log(data);
     switch (data.payload.event) {
       case 'signIn':
-          setUser(data.payload.data.attributes.email);
+          setUser({...User, TypeUser: TypeUserLocal, Email:data.payload.data.attributes.email});
+          localStorage.setItem("User", JSON.stringify({Email:data.payload.data.attributes.email, TypeUser:TypeUserLocal}));
           history.push("./Home");
         break;
       default:
@@ -61,7 +62,7 @@ const SignIn = () => {
       <img src={Logo} alt="Logo img" className={logoClassName}/>
       <div className="authenticator-container">
         {
-          (TypeUser!==undefined)?(
+          (TypeUserLocal!==undefined)?(
             <AmplifyAuthenticator usernameAlias="email" className="amplify-authenticator">
               <AmplifySignUp
                 slot="sign-up"

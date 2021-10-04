@@ -1,12 +1,12 @@
 .signin-logo-big{
-  width: 60%;
-  height: 10%;
+  width: 60vw;
+  height: 12vh;
   margin-top: 5%;
 }
 
 .signin-logo-small{
   width: 30%;
-  height: 5%;
+  height: 6.5%;
   margin-top: 5%;
 }
 
@@ -44,13 +44,20 @@ amplify-sign-in{
 }
 
 .type-user-container{
-  width: 80%;
+  width: 55%;
   min-height: 10vh;
 }
 
 .customer-main-container-big{
-  width: 30vw;
-  height: 30vw;
+  width: 35vw;
+  height: 35vw;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.customer-main-container-normal{
+  width: 20vw;
+  height: 20vw;
   border-radius: 10px;
   z-index: 1;
 }

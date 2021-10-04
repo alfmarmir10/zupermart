@@ -1,0 +1,13 @@
+.topbar-main-container{
+  width: 100%;
+  min-height: 8vh;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.topbar-logo-icon{
+  width: 35%;
+  height: 90%;
+}

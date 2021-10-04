@@ -4,7 +4,7 @@
   background-color: var(--DarkBlue);
   position: fixed;
   top: 0;
-  right: -80vw;
+  right: -80%;
   transition: right 0.3s ease;
   z-index: 1;
 }

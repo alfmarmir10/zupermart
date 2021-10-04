@@ -378,4 +378,7 @@ body::-webkit-scrollbar {
   align-items: center;
   flex-direction: column;
   background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

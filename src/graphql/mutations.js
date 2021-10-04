@@ -12,6 +12,7 @@ export const createProduct = /* GraphQL */ `
       Units
       Presentation
       Stock
+      Price
       _version
       _deleted
       _lastChangedAt
@@ -31,6 +32,7 @@ export const updateProduct = /* GraphQL */ `
       Units
       Presentation
       Stock
+      Price
       _version
       _deleted
       _lastChangedAt
@@ -50,6 +52,7 @@ export const deleteProduct = /* GraphQL */ `
       Units
       Presentation
       Stock
+      Price
       _version
       _deleted
       _lastChangedAt

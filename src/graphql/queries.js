@@ -9,6 +9,7 @@ export const getProduct = /* GraphQL */ `
       Units
       Presentation
       Stock
+      Price
       _version
       _deleted
       _lastChangedAt
@@ -30,6 +31,7 @@ export const listProducts = /* GraphQL */ `
         Units
         Presentation
         Stock
+        Price
         _version
         _deleted
         _lastChangedAt
@@ -60,6 +62,7 @@ export const syncProducts = /* GraphQL */ `
         Units
         Presentation
         Stock
+        Price
         _version
         _deleted
         _lastChangedAt

@@ -4,4 +4,6 @@ type Product @model @auth(rules: [{allow: public}]) {
   Units: String
   Presentation: String
   Stock: Float
+  Price: Float
 }
+ 

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import SignIn from './views/SignIn';
 import Home from './views/Home';
+import Warehouse from './views/Warehouse';
 
 import UserContextProvider from './contexts/UserContext';
 import awsconfig from "./aws-exports";
@@ -17,14 +18,15 @@ function App() {
     <UserContextProvider>
       <Router>
         <Switch>
-          {/* <Layout> */}
-            <Route path="/home">
-              <Home />
-            </Route>  
-            <Route path="/">
-              <SignIn />
-            </Route>
-          {/* </Layout> */}
+          <Route path="/home">
+            <Home />
+          </Route>  
+          <Route path="/warehouse">
+            <Warehouse />
+          </Route>  
+          <Route path="/">
+            <SignIn />
+          </Route>
         </Switch>
       </Router>
     </UserContextProvider>
