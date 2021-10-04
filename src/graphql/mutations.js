@@ -1,6 +1,66 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createSales = /* GraphQL */ `
+  mutation CreateSales(
+    $input: CreateSalesInput!
+    $condition: ModelSalesConditionInput
+  ) {
+    createSales(input: $input, condition: $condition) {
+      id
+      Email
+      Total
+      Amount
+      Products
+      Date
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSales = /* GraphQL */ `
+  mutation UpdateSales(
+    $input: UpdateSalesInput!
+    $condition: ModelSalesConditionInput
+  ) {
+    updateSales(input: $input, condition: $condition) {
+      id
+      Email
+      Total
+      Amount
+      Products
+      Date
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSales = /* GraphQL */ `
+  mutation DeleteSales(
+    $input: DeleteSalesInput!
+    $condition: ModelSalesConditionInput
+  ) {
+    deleteSales(input: $input, condition: $condition) {
+      id
+      Email
+      Total
+      Amount
+      Products
+      Date
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createProduct = /* GraphQL */ `
   mutation CreateProduct(
     $input: CreateProductInput!
@@ -13,6 +73,7 @@ export const createProduct = /* GraphQL */ `
       Presentation
       Stock
       Price
+      Img
       _version
       _deleted
       _lastChangedAt
@@ -33,6 +94,7 @@ export const updateProduct = /* GraphQL */ `
       Presentation
       Stock
       Price
+      Img
       _version
       _deleted
       _lastChangedAt
@@ -53,6 +115,7 @@ export const deleteProduct = /* GraphQL */ `
       Presentation
       Stock
       Price
+      Img
       _version
       _deleted
       _lastChangedAt

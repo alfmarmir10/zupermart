@@ -1,3 +1,12 @@
+type Sales @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Email: AWSEmail
+  Total: Float
+  Amount: String
+  Products: AWSJSON
+  Date: AWSDateTime
+}
+
 type Product @model @auth(rules: [{allow: public}]) {
   id: ID!
   Description: String
@@ -5,5 +14,6 @@ type Product @model @auth(rules: [{allow: public}]) {
   Presentation: String
   Stock: Float
   Price: Float
+  Img: String
 }
  

@@ -1,6 +1,79 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getSales = /* GraphQL */ `
+  query GetSales($id: ID!) {
+    getSales(id: $id) {
+      id
+      Email
+      Total
+      Amount
+      Products
+      Date
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSales = /* GraphQL */ `
+  query ListSales(
+    $filter: ModelSalesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSales(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        Email
+        Total
+        Amount
+        Products
+        Date
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncSales = /* GraphQL */ `
+  query SyncSales(
+    $filter: ModelSalesFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncSales(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        Email
+        Total
+        Amount
+        Products
+        Date
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
@@ -10,6 +83,7 @@ export const getProduct = /* GraphQL */ `
       Presentation
       Stock
       Price
+      Img
       _version
       _deleted
       _lastChangedAt
@@ -32,6 +106,7 @@ export const listProducts = /* GraphQL */ `
         Presentation
         Stock
         Price
+        Img
         _version
         _deleted
         _lastChangedAt
@@ -63,6 +138,7 @@ export const syncProducts = /* GraphQL */ `
         Presentation
         Stock
         Price
+        Img
         _version
         _deleted
         _lastChangedAt

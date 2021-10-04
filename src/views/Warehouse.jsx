@@ -8,12 +8,14 @@ import '../styles/Warehouse/warehouse_styles.css';
 import Plus from '../assets/img/plus.png';
 import Close from '../assets/img/cancel.png';
 import { createProduct } from "../graphql/mutations";
+import { onCreateProduct } from "../graphql/subscriptions";
 import { UserContext } from '../contexts/UserContext';
 
 import $ from 'jquery';
 
 import 'datatables.net';
 import 'datatables.net-dt/css/jquery.dataTables.css';
+import Lost from '../components/GLOBAL/Lost';
 
 const Warehouse = () => {
   // const [ProductImg, setProductImg] = useState();
@@ -23,6 +25,7 @@ const Warehouse = () => {
   const [ShowAddProduct, setShowAddProduct] = useState(false);
   const [ProductToAdd, setProductToAdd] = useState();
   const [ProductToAddImg, setProductToAddImg] = useState();
+  const [ChangedProduct, setChangedProduct] = useState();
 
   const AddProductMenuClassName = (ShowAddProduct === true) ? 'add-product-menu-main-container opened' : 'add-product-menu-main-container';
 
@@ -31,13 +34,36 @@ const Warehouse = () => {
       async function fetchProducts(){
         const productsArray = await DataStore.query(Product);
         setInventory(productsArray);
-        console.log(productsArray);
       }
       fetchProducts();
     } catch (error) {
       console.error(error);
     }
+
+    try {
+      const subscription = DataStore.observe(Product).subscribe(msg => {
+        setChangedProduct(msg.element);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
   }, []);
+
+  useEffect(() => {
+    let InventoryObj = [];
+    if(Inventory!==undefined){
+      for(let i = 0; i<Inventory.length;i++){
+        if(ChangedProduct.id !== Inventory[i]["id"]){
+          InventoryObj.push(Inventory[i]);
+        }
+      }
+      InventoryObj.push(ChangedProduct);
+      setInventory(InventoryObj);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ChangedProduct]);
+
 
   useEffect(() => {
     if(Inventory !== undefined){
@@ -45,7 +71,7 @@ const Warehouse = () => {
     }
   }, [Inventory]);
 
-  function addProduct(){
+  async function addProduct(){
     const inputs = document.getElementsByClassName('input-add-product');
     for(let i = 0; i<inputs.length; i++){
       if(inputs[i].value === ""){
@@ -53,14 +79,31 @@ const Warehouse = () => {
         return
       }
     }
+    if(ProductToAddImg===undefined){
+      alert("The image is required");
+      return
+    }
+    let imgUploadKey;
+    try {
+      imgUploadKey = await Storage.put(`${document.getElementsByName('prod-description')[0].value}.png`, ProductToAddImg, {
+        contentType: 'image/png' // contentType is optional
+      });
+      // setProductImgKey(imgUploadKey);
+      console.log(imgUploadKey);
+    } catch (error) {
+      alert('Error uploading file: ', error);
+      return
+    }  
+
     setProductToAdd({
       Description: document.getElementsByName('prod-description')[0].value,
       Presentation: document.getElementsByName('prod-presentation')[0].value,
       Units: document.getElementsByName('prod-units')[0].value,
       Price: document.getElementsByName('prod-price')[0].value,
+      Img: imgUploadKey.key
     })
   }
-  console.log(ProductToAdd);
+  // console.log(ProductToAdd);
 
   useEffect(() => {
     if(ProductToAdd !== undefined){
@@ -70,7 +113,8 @@ const Warehouse = () => {
           Description: ProductToAdd.Description,
           Presentation: ProductToAdd.Presentation,
           Units: ProductToAdd.Units,
-          Price: ProductToAdd.Price
+          Price: ProductToAdd.Price,
+          Img: ProductToAdd.Img
         };
       
         await API.graphql(graphqlOperation(createProduct, { input: productObj }));
@@ -103,15 +147,6 @@ const Warehouse = () => {
     console.log(file);
     setProductToAddImg(file);
     return
-    // try {
-    //   const imgUploadKey = await Storage.put(file.name, file, {
-    //     contentType: 'image/png' // contentType is optional
-    //   });
-    //   // setProductImgKey(imgUploadKey);
-    //   console.log(imgUploadKey);
-    // } catch (error) {
-    //   console.log('Error uploading file: ', error);
-    // }  
   }
 
   return (
@@ -141,7 +176,7 @@ const Warehouse = () => {
                           <td className="font-size-xs text-align-center">{item.Presentation}</td>
                           <td className="font-size-xs text-align-center">{item.Units}</td>
                           <td className="font-size-xs text-align-center">{item.Stock}</td>
-                          <td className="font-size-xs text-align-center">{item.Price}</td>
+                          <td className="font-size-xs text-align-center">${item.Price}</td>
                         </tr>
                       );
                     })
@@ -164,7 +199,7 @@ const Warehouse = () => {
             </div>
             <div className={AddProductMenuClassName}>
               <div className="add-product-menu">
-                    <img src={Close} alt="Close icon" className="close-icon" onClick={closeAddProduct}/>
+                  <img src={Close} alt="Close icon" className="close-icon" onClick={closeAddProduct}/>
                   <p className="font-weight-bold font-size-md margin-top-sm">Add New Product</p>
                   <form className='form-add-product margin-top-md'>
                     {
@@ -186,8 +221,8 @@ const Warehouse = () => {
               </div>
             </div>
           </div>
-        ) : (
-          <p>Customer</p>
+        ) : (          
+          <Lost />            
         )
       }
     </div>

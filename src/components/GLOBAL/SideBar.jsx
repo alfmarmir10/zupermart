@@ -65,12 +65,17 @@ const SideBar = () => {
         {
           User ? (<p className="margin-top-xs color-white font-weight-bold font-size-sm">{User.Email}</p>) : <></>
         }
-        <div className="cart-main-container">
-          <p className="font-weight-bold  font-size-sm margin-top-xs" >Cart List</p>
-          <div className="cart-items-container">
+        {User && User.TypeUser === "Customer" ? (
+          <div className="cart-main-container">
+            <p className="font-weight-bold  font-size-sm margin-top-xs" >Cart List</p>
+            <div className="cart-items-container">
 
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )
+        }
       </div>
     </div>
   )
