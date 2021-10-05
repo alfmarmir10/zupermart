@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import '../styles/global_styles.css';
 import '../styles/Home/home_styles.css';
 import Sidebar from '../components/GLOBAL/SideBar'
@@ -11,6 +11,9 @@ import TopBar from '../components/GLOBAL/TopBar';
 import { CartContext } from '../contexts/CartContext';
 import { InventoryContext } from '../contexts/InventoryContext';
 import {AmplifyS3Image} from "@aws-amplify/ui-react";
+import { DataStore } from 'aws-amplify';
+import { Product } from '../models';
+import { useState } from 'react/cjs/react.development';
 
 // import {Storage} from 'aws-amplify';
 
@@ -19,9 +22,39 @@ const Home = () => {
   const {User} = useContext(UserContext);
   const {dispatchCart} = useContext(CartContext);
   const {Inventory} = useContext(InventoryContext);
+  const [ProductToAdd, setProductToAdd] = useState();
   const history = useHistory();
 
   // console.log(Inventory);
+
+  useEffect(() => {
+    if(ProductToAdd!==undefined){
+      async function addProduct(item){
+        const original = await DataStore.query(Product, item.id);
+
+        if(original.Stock>0){
+          await DataStore.save(
+            Product.copyOf(original, updated => {
+              updated.Stock = original.Stock - 1;
+            })
+          );
+      
+          dispatchCart({
+            type:"ADD_PRODUCT",
+            payload: {
+              id:item.id,
+              Description: item.Description,
+              Price: item.Price,
+              Amount: 1,
+              Img: item.Img
+            }
+          })  
+        }
+    
+      }
+      addProduct(ProductToAdd)  
+    }
+  }, [ProductToAdd]);
 
   return (
     <div className='views-main-container'>
@@ -50,16 +83,9 @@ const Home = () => {
                     <p className='font-weight-thin font-size-sm margin-top-sm'>${item.Price}</p>
                     <button 
                       className='padding-xs width-80percent bg-yellow font-size-sm margin-top-sm margin-bottom-sm box-shadow-normal font-weight-bold border-radious-5px'
-                      onClick={()=>dispatchCart({
-                        type:"ADD_PRODUCT",
-                        payload: {
-                          id:item.id,
-                          Description: item.Description,
-                          Price: item.Price,
-                          Amount: 1,
-                          Img: item.Img
-                        }
-                      })}>Add to cart</button>
+                      onClick={()=>{
+                        setProductToAdd(item)
+                      }}>Add to cart</button>
                     {
                       (item.Stock === 0) ? <img src={Outofstock} alt="OutofStock img" className="out-stock-img" /> : <></>
                     }

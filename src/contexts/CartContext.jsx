@@ -17,16 +17,41 @@ const CartContextProvider = ({children}) => {
           Total: Number(state["Total"]) + Number(action.payload.Price),
           Amount: state["Amount"] + action.payload.Amount,
           Products:{
-            ...state.Products,
-            [action.payload.id] : {
-            Id: action.payload.id,
-            Description: action.payload.Description,
-            Price: action.payload.Price,
-            Total: (state["Products"][action.payload.id]) ? state["Products"][action.payload.id]["Total"]+action.payload.Price : action.payload.Price,
-            Amount: (state["Products"][action.payload.id]) ? state["Products"][action.payload.id]["Amount"]+action.payload.Amount : action.payload.Amount,
-            Img: action.payload.Img
+              ...state.Products,
+              [action.payload.id] : {
+              Id: action.payload.id,
+              Description: action.payload.Description,
+              Price: action.payload.Price,
+              Total: (state["Products"][action.payload.id]) ? state["Products"][action.payload.id]["Total"]+action.payload.Price : action.payload.Price,
+              Amount: (state["Products"][action.payload.id]) ? state["Products"][action.payload.id]["Amount"]+action.payload.Amount : action.payload.Amount,
+              Img: action.payload.Img
+            }
           }
         }
+      case "DISCOUNT_PRODUCT":
+        return{
+          ...state,
+          Total: Number(state["Total"]) - Number(action.payload.Price),
+          Amount: state["Amount"] - action.payload.Amount,
+          Products:{
+              ...state.Products,
+              [action.payload.id] : {
+              Id: action.payload.id,
+              Description: action.payload.Description,
+              Price: action.payload.Price,
+              Total: (state["Products"][action.payload.id]) ? state["Products"][action.payload.id]["Total"]-action.payload.Price : action.payload.Price,
+              Amount: (state["Products"][action.payload.id]) ? state["Products"][action.payload.id]["Amount"]-action.payload.Amount : action.payload.Amount,
+              Img: action.payload.Img
+            }
+          }
+        }
+      case "REMOVE_PRODUCT":
+        const newProductsArray = state.Products.filter(item => item.Id !== action.payload.id);
+        return{
+          ...state,
+          Total: Number(state["Total"]) - Number(action.payload.Price),
+          Amount: state["Amount"] - action.payload.Amount,
+          Products: newProductsArray
         }
       default:
         break;

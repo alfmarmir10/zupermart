@@ -5,20 +5,96 @@ import { UserContext } from '../../contexts/UserContext';
 import { useHistory } from 'react-router';
 import Auth from '@aws-amplify/auth';
 import Avatar from '../../assets/img/avatar.png'
+import Tie from '../../assets/img/tie.png'
+import Carts from '../../assets/img/carts.png'
 import Salida from '../../assets/img/salida.png'
 import Mas from '../../assets/img/mas.png'
 import Negative from '../../assets/img/negative.png'
 import { CartContext } from '../../contexts/CartContext';
 import {AmplifyS3Image} from "@aws-amplify/ui-react";
+import { DataStore } from 'aws-amplify';
+import { Product } from '../../models';
 
 const SideBar = () => {
   const [StatusSideBar, setStatusSideBar] = useState(false);
   const [Products, setProducts] = useState();
   const {User, setUser} = useContext(UserContext);
   const {cartState, dispatchCart} = useContext(CartContext);
+  const [ProductToAddSideBar, setProductToAddSideBar] = useState();
+  const [ProductToRemoveSideBar, setProductToRemoveSideBar] = useState();
   const history = useHistory();
 
   // console.log(Products);
+
+  useEffect(() => {
+    console.log(ProductToAddSideBar);
+    
+    if(ProductToAddSideBar!==undefined){
+      try {
+        async function addProductSideBar(){
+          const original = await DataStore.query(Product, ProductToAddSideBar.id);
+          console.log("Original"+JSON.stringify(original));
+          
+          await DataStore.save(
+            Product.copyOf(original, updated => {
+              updated.Stock = original.Stock - 1;
+              if(original.Stock>0){
+                dispatchCart({
+                  type:"ADD_PRODUCT",
+                  payload: {
+                    id:ProductToAddSideBar.id,
+                    Description: ProductToAddSideBar.Description,
+                    Price: ProductToAddSideBar.Price,
+                    Amount: 1,
+                    Img: ProductToAddSideBar.Img
+                  }
+                })  
+              } else {
+                alert("There´s no more stock");
+              }
+            })
+          );
+          setProductToAddSideBar();
+        }
+        addProductSideBar()  
+      } catch (error) {
+        
+      }
+    }
+  }, [ProductToAddSideBar]);
+  
+  useEffect(() => {
+    if(ProductToRemoveSideBar!==undefined){
+      async function removeProduct(item){
+
+      if(item.Amount>0){
+        const original = await DataStore.query(Product, item.id);
+
+        await DataStore.save(
+          Product.copyOf(original, updated => {
+            updated.Stock = original.Stock + 1;
+          })
+        );
+    
+        dispatchCart({
+          type:(item.Amount>1) ? "DISCOUNT_PRODUCT" : "REMOVE_PRODUCT",
+          payload: {
+            id:item.id,
+            Description: item.Description,
+            Price: item.Price,
+            Amount: 1,
+            Img: item.Img
+          }
+        })  
+
+      } else {
+        alert("No hay más existencias.");
+      }
+    
+      }
+      removeProduct(ProductToRemoveSideBar) 
+    }
+  }, [ProductToRemoveSideBar]);
 
   useEffect(() => {
     // setProducts();
@@ -30,7 +106,7 @@ const SideBar = () => {
     setProducts(prodsArray);
   }, [cartState]);
 
-  console.log("Products: "+JSON.stringify(Products));
+  // console.log("Products: "+JSON.stringify(Products));
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({
@@ -76,9 +152,10 @@ const SideBar = () => {
   return (
     <div className={SideBarClassName}>
       <div className="floating-img-main-container" onClick={handleStatusSideBar}>
-        <div className="floating-img-secondary-container" />
+        {/* <div className="floating-img-secondary-container" /> */}
+        <img src={(User && User.TypeUser === "Business") ? Tie : Carts} alt="Floating img" className='floating-img-secondary-container' />
         {
-          cartState.Amount > 0 ? (
+          User && User.TypeUser==="Customer" && cartState.Amount > 0 ? (
             <div className="floating-cart-amount-badge-container">
               <p className="color-white">{cartState.Amount}</p>
             </div>
@@ -96,7 +173,7 @@ const SideBar = () => {
             <p className="font-weight-bold  font-size-sm margin-top-xs" >Cart List</p>
             <div className="cart-items-container">
               {
-                Products.map((item)=>{
+                Products && Products.map((item)=>{
                   // console.log(item);
                   return (
                     <div className="cart-product-card" key={item.Id}>
@@ -118,20 +195,18 @@ const SideBar = () => {
                           </div>
                         </div>
                         <div className="add-remove-buttons-container">
-                          <img src={Mas}
+                          <img 
+                            src={Mas}
                             alt="Add item"
                             className='add-remove-button-img'
-                            onClick={()=>dispatchCart({
-                              type:"ADD_PRODUCT",
-                              payload: {
-                                id:item.Id,
-                                Description: item.Description,
-                                Price: item.Price,
-                                Amount: 1,
-                                Img: item.Img
-                              }
-                            })}/>
-                          <img src={Negative} alt="Remove itemm" className='add-remove-button-img' />
+                            onClick={()=>setProductToAddSideBar(item)}
+                            />
+                          <img
+                            src={Negative}
+                            alt="Remove itemm"
+                            className='add-remove-button-img'
+                            onClick={()=>setProductToRemoveSideBar(item)}
+                            />
                         </div>
                       </div>
                     </div>
