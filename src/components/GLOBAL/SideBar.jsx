@@ -22,6 +22,7 @@ const SideBar = () => {
   const {cartState, dispatchCart} = useContext(CartContext);
   const [ProductToAddSideBar, setProductToAddSideBar] = useState();
   const [ProductToRemoveSideBar, setProductToRemoveSideBar] = useState();
+  const [OperationInProcess, setOperationInProcess] = useState(false);
   const history = useHistory();
 
   // console.log(Products);
@@ -29,71 +30,84 @@ const SideBar = () => {
   useEffect(() => {
     // console.log(ProductToAddSideBar);
     // return
-    if(ProductToAddSideBar!==undefined){
-      try {
-        async function addProductSideBar(){
-          const original = await DataStore.query(Product, ProductToAddSideBar.Id);
-          console.log("Original"+JSON.stringify(original));
-          
-          await DataStore.save(
-            Product.copyOf(original, updated => {
-              updated.Stock = original.Stock - 1;
-              if(original.Stock>0){
-                dispatchCart({
-                  type:"ADD_PRODUCT",
-                  payload: {
-                    id:ProductToAddSideBar.Id,
-                    Description: ProductToAddSideBar.Description,
-                    Price: ProductToAddSideBar.Price,
-                    Amount: 1,
-                    Img: ProductToAddSideBar.Img
-                  }
-                })  
-              } else {
-                alert("There´s no more stock");
-              }
-            })
-          );
-          setProductToAddSideBar();
+    if(OperationInProcess===false){
+      if(ProductToAddSideBar!==undefined){
+        setOperationInProcess(true);
+        try {
+          async function addProductSideBar(){
+            const original = await DataStore.query(Product, ProductToAddSideBar.Id);
+            console.log("Original"+JSON.stringify(original));
+            
+            await DataStore.save(
+              Product.copyOf(original, updated => {
+                updated.Stock = original.Stock - 1;
+                if(original.Stock>0){
+                  dispatchCart({
+                    type:"ADD_PRODUCT",
+                    payload: {
+                      id:ProductToAddSideBar.Id,
+                      Description: ProductToAddSideBar.Description,
+                      Price: ProductToAddSideBar.Price,
+                      Amount: 1,
+                      Img: ProductToAddSideBar.Img
+                    }
+                  })  
+                } else {
+                  alert("There´s no more stock");
+                }
+                setOperationInProcess(false);
+              })
+            );
+            setProductToAddSideBar();
+          }
+          addProductSideBar()  
+        } catch (error) {
+          console.error(error);
         }
-        addProductSideBar()  
-      } catch (error) {
-        
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ProductToAddSideBar]);
   
   useEffect(() => {
-    if(ProductToRemoveSideBar!==undefined){
-      async function removeProduct(item){
-
-      if(item.Amount>0){
-        const original = await DataStore.query(Product, item.id);
-
-        await DataStore.save(
-          Product.copyOf(original, updated => {
-            updated.Stock = original.Stock + 1;
-          })
-        );
+    if(OperationInProcess===false){
+      if(ProductToRemoveSideBar!==undefined){
+        setOperationInProcess(true);
+        try {
+          async function removeProduct(){
+            
+            if(ProductToRemoveSideBar.Amount>0){
+              const original = await DataStore.query(Product, ProductToRemoveSideBar.Id);
     
-        dispatchCart({
-          type:(item.Amount>1) ? "DISCOUNT_PRODUCT" : "REMOVE_PRODUCT",
-          payload: {
-            id:item.id,
-            Description: item.Description,
-            Price: item.Price,
-            Amount: 1,
-            Img: item.Img
+              await DataStore.save(
+                Product.copyOf(original, updated => {
+                  updated.Stock = original.Stock + 1;
+                  dispatchCart({
+                    type:(ProductToRemoveSideBar.Amount>1) ? "DISCOUNT_PRODUCT" : "REMOVE_PRODUCT",
+                    payload: {
+                      id:ProductToRemoveSideBar.Id,
+                      Description: ProductToRemoveSideBar.Description,
+                      Price: ProductToRemoveSideBar.Price,
+                      Amount: 1,
+                      Img: ProductToRemoveSideBar.Img
+                    }
+                  })  
+                  setOperationInProcess(false);
+                })
+              );
+          
+    
+            } else {
+              alert("There´s no more stock.");
+            }
           }
-        })  
-
-      } else {
-        alert("No hay más existencias.");
+          removeProduct() 
+        } catch (error) {
+          console.error(error);
+        }
       }
-    
-      }
-      removeProduct(ProductToRemoveSideBar) 
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ProductToRemoveSideBar]);
 
   useEffect(() => {
@@ -202,6 +216,7 @@ const SideBar = () => {
                             onClick={()=>setProductToAddSideBar(item)}
                             />
                           <img
+                          id="remove_item_btn"
                             src={Negative}
                             alt="Remove itemm"
                             className='add-remove-button-img'

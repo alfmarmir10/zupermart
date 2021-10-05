@@ -46,7 +46,8 @@ const CartContextProvider = ({children}) => {
           }
         }
       case "REMOVE_PRODUCT":
-        const newProductsArray = state.Products.filter(item => item.Id !== action.payload.id);
+        let newProductsArray = Object.values(state.Products);
+        newProductsArray = newProductsArray.filter(item => item.Id !== action.payload.id);
         return{
           ...state,
           Total: Number(state["Total"]) - Number(action.payload.Price),
