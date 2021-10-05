@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../styles/global_styles.css';
 import '../styles/Home/home_styles.css';
 import Sidebar from '../components/GLOBAL/SideBar'
@@ -13,7 +13,6 @@ import { InventoryContext } from '../contexts/InventoryContext';
 import {AmplifyS3Image} from "@aws-amplify/ui-react";
 import { DataStore } from 'aws-amplify';
 import { Product } from '../models';
-import { useState } from 'react/cjs/react.development';
 
 // import {Storage} from 'aws-amplify';
 
