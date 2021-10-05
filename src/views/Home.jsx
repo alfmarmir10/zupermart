@@ -6,13 +6,13 @@ import { UserContext } from '../contexts/UserContext';
 import WarehouseIcon from '../assets/img/warehouse.png';
 import POSIcon from '../assets/img/shops.png';
 import Outofstock from '../assets/img/out-of-stock.png';
-import { useHistory } from 'react-router';
 import TopBar from '../components/GLOBAL/TopBar';
 import { CartContext } from '../contexts/CartContext';
 import { InventoryContext } from '../contexts/InventoryContext';
 import {AmplifyS3Image} from "@aws-amplify/ui-react";
 import { DataStore } from 'aws-amplify';
 import { Product } from '../models';
+import { useHistory } from 'react-router';
 
 // import {Storage} from 'aws-amplify';
 
