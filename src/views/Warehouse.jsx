@@ -1,14 +1,13 @@
-import { DataStore, Storage, API,  graphqlOperation } from 'aws-amplify';
+import { Storage, API,  graphqlOperation } from 'aws-amplify';
 import React, { useContext, useEffect, useState } from 'react'
 import SideBar from '../components/GLOBAL/SideBar'
 import Topbar from '../components/GLOBAL/TopBar'
-import { Product } from '../models';
+// import { Product } from '../models';
 import '../styles/global_styles.css';
 import '../styles/Warehouse/warehouse_styles.css';
 import Plus from '../assets/img/plus.png';
 import Close from '../assets/img/cancel.png';
 import { createProduct } from "../graphql/mutations";
-import { onCreateProduct } from "../graphql/subscriptions";
 import { UserContext } from '../contexts/UserContext';
 
 import $ from 'jquery';
@@ -16,58 +15,22 @@ import $ from 'jquery';
 import 'datatables.net';
 import 'datatables.net-dt/css/jquery.dataTables.css';
 import Lost from '../components/GLOBAL/Lost';
+import { InventoryContext } from '../contexts/InventoryContext';
 
 const Warehouse = () => {
-  // const [ProductImg, setProductImg] = useState();
-  // const [ProductImgKey, setProductImgKey] = useState();
   const {User} = useContext(UserContext);
-  const [Inventory, setInventory] = useState();
+  const {Inventory} = useContext(InventoryContext);
   const [ShowAddProduct, setShowAddProduct] = useState(false);
   const [ProductToAdd, setProductToAdd] = useState();
   const [ProductToAddImg, setProductToAddImg] = useState();
-  const [ChangedProduct, setChangedProduct] = useState();
 
   const AddProductMenuClassName = (ShowAddProduct === true) ? 'add-product-menu-main-container opened' : 'add-product-menu-main-container';
 
   useEffect(() => {
-    try {
-      async function fetchProducts(){
-        const productsArray = await DataStore.query(Product);
-        setInventory(productsArray);
-      }
-      fetchProducts();
-    } catch (error) {
-      console.error(error);
-    }
-
-    try {
-      const subscription = DataStore.observe(Product).subscribe(msg => {
-        setChangedProduct(msg.element);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-
-  }, []);
-
-  useEffect(() => {
-    let InventoryObj = [];
-    if(Inventory!==undefined){
-      for(let i = 0; i<Inventory.length;i++){
-        if(ChangedProduct.id !== Inventory[i]["id"]){
-          InventoryObj.push(Inventory[i]);
-        }
-      }
-      InventoryObj.push(ChangedProduct);
-      setInventory(InventoryObj);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ChangedProduct]);
-
-
-  useEffect(() => {
     if(Inventory !== undefined){
-      $('#inventory').DataTable();
+      $('#inventory').DataTable({
+        retrieve: true
+      });
     }
   }, [Inventory]);
 
@@ -101,7 +64,7 @@ const Warehouse = () => {
       Units: document.getElementsByName('prod-units')[0].value,
       Price: document.getElementsByName('prod-price')[0].value,
       Img: imgUploadKey.key
-    })
+    });
   }
   // console.log(ProductToAdd);
 
@@ -124,10 +87,6 @@ const Warehouse = () => {
       createNewProduct();
     }
   }, [ProductToAdd]);
-
-  // function handleChange(event) {
-  //   setProductImg(URL.createObjectURL(event.target.files[0]))
-  // }
 
   function showAddProduct(){
     setShowAddProduct(true);
