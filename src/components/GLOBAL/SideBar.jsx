@@ -27,12 +27,12 @@ const SideBar = () => {
   // console.log(Products);
 
   useEffect(() => {
-    console.log(ProductToAddSideBar);
-    
+    // console.log(ProductToAddSideBar);
+    // return
     if(ProductToAddSideBar!==undefined){
       try {
         async function addProductSideBar(){
-          const original = await DataStore.query(Product, ProductToAddSideBar.id);
+          const original = await DataStore.query(Product, ProductToAddSideBar.Id);
           console.log("Original"+JSON.stringify(original));
           
           await DataStore.save(
@@ -42,7 +42,7 @@ const SideBar = () => {
                 dispatchCart({
                   type:"ADD_PRODUCT",
                   payload: {
-                    id:ProductToAddSideBar.id,
+                    id:ProductToAddSideBar.Id,
                     Description: ProductToAddSideBar.Description,
                     Price: ProductToAddSideBar.Price,
                     Amount: 1,
